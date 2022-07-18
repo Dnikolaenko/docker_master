@@ -1,0 +1,5 @@
+# ignore pet project folder
+/public_html/*
+
+# ignore mac system files
+.DS_Store
