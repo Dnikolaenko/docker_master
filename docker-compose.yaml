@@ -1,15 +1,15 @@
 version: "3.1"
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: daily-news-nginx
     restart: always
     ports:
-      - "80:80"
+      - "8081:80"
       - "443:443"
     volumes:
       - ./config/nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./public_html/:/var/www
+      - ./public_html/daily-news-bot/:/var/www
     depends_on:
       - php
   php:
@@ -17,14 +17,21 @@ services:
     container_name: daily-news-php
     restart: always
     volumes:
-      - ./public_html:/var/www
+      - ./public_html/daily-news-bot/:/var/www
+      - ./config/php/php.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
+    environment:
+      PHP_IDE_CONFIG: serverName=dima
   redis:
     image: "redis:alpine"
+    container_name: daily-news-redis-storage
     environment:
-    - ALLOW_EMPTY_PASSWORD=yes
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./redis-data:/var/lib/redis
     ports:
      - "6379:6379"
   redisinsight:
     image: redislabs/redisinsight:latest
+    container_name: daily-news-redis-gui
     ports:
       - '8001:8001'

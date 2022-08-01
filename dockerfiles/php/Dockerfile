@@ -12,19 +12,15 @@ RUN apt-get update && apt-get install -y \
 	libonig-dev \
 	libzip-dev \
 	libmcrypt-dev \
-	libldap \
 	&& docker-php-ext-install -j$(nproc) iconv mbstring mysqli pdo_mysql zip
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | sudo -E bash
-
-RUN apt install symfony-cli
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-ADD php.ini /usr/local/etc/php/conf.d/40-custom.ini
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
-RUN symfony new daily-news-bot --version="6.0.*"
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-CMD ["php-fpm"]
+CMD composer i -o ; php-fpm
