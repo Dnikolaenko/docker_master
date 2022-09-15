@@ -24,6 +24,7 @@ services:
   redis:
     image: "redis:alpine"
     container_name: daily-news-redis-storage
+    restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     volumes:
@@ -33,5 +34,6 @@ services:
   redisinsight:
     image: redislabs/redisinsight:latest
     container_name: daily-news-redis-gui
+    restart: always
     ports:
       - '8001:8001'
