@@ -3,3 +3,6 @@
 
 # ignore mac system files
 .DS_Store
+
+# ignore IDEa configs
+.idea/
