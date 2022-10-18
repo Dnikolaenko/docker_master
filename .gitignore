@@ -6,3 +6,9 @@
 
 # ignore IDEa configs
 .idea/
+
+# ignore local env file
+.env
+
+# ignore temp project files
+var/

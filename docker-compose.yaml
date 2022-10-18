@@ -12,6 +12,8 @@ services:
       - ./public_html/daily-news-bot/:/var/www
     depends_on:
       - php
+    networks:
+      - daily-bot-net
   php:
     build: ./dockerfiles/php
     container_name: daily-news-php
@@ -21,19 +23,32 @@ services:
       - ./config/php/php.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
     environment:
       PHP_IDE_CONFIG: serverName=dima
+    networks:
+      - daily-bot-net
+  mysql:
+    image: mysql:5.7
+    container_name: daily-news-database
+    restart: always
+    ports:
+      - "3320:3306"
+    env_file:
+      - .env
+    volumes:
+      - ./var/mysql/data:/var/lib/mysql
+    networks:
+      - daily-bot-net
   redis:
-    image: "redis:alpine"
+    image: redis:alpine
     container_name: daily-news-redis-storage
     restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     volumes:
-      - ./redis-data:/var/lib/redis
+      - ./var/redis-data:/data
     ports:
      - "6379:6379"
-  redisinsight:
-    image: redislabs/redisinsight:latest
-    container_name: daily-news-redis-gui
-    restart: always
-    ports:
-      - '8001:8001'
+    networks:
+      - daily-bot-net
+networks:
+  daily-bot-net:
+    driver: bridge
