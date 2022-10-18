@@ -11,4 +11,5 @@
 .env
 
 # ignore temp project files
-var/
+var/mysql
+var/redis-data
