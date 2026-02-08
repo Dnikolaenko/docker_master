@@ -25,18 +25,6 @@ services:
       PHP_IDE_CONFIG: serverName=dima
     networks:
       - daily-bot-net
-  mysql:
-    image: mysql:5.7
-    container_name: daily-news-database
-    restart: always
-    ports:
-      - "3320:3306"
-    env_file:
-      - .env
-    volumes:
-      - ./var/mysql/data:/var/lib/mysql
-    networks:
-      - daily-bot-net
   redis:
     image: redis:alpine
     container_name: daily-news-redis-storage
