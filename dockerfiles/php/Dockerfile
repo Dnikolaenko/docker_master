@@ -1,6 +1,6 @@
 FROM php:8.1-fpm
 
-MAINTAINER dnikolaenko2908@gmail.com
+LABEL maintainer="dnikolaenko2908@gmail.com"
 
 RUN apt-get update && apt-get install -y \
 	curl \
@@ -20,6 +20,9 @@ WORKDIR /var/www
 
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
+
+RUN pecl install redis \
+    && docker-php-ext-enable redis
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
